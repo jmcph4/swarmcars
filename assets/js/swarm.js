@@ -7,6 +7,10 @@ var runs = 0;
 var vertical = Math.floor(Math.random() * 800) + 1;
 var horizontal = Math.floor(Math.random() * 600) + 1;
 
+var n = 8; // total number of cars
+var variance = 10; // how much each "random" movement is
+var frequency = 4; // how often "random" movements occur (in runs, not seconds)
+
 function Obj(x, y, side){
   this.x = x;
   this.y = y;
@@ -16,25 +20,11 @@ function Obj(x, y, side){
 }
 
 function init(){
-  // populate objects
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
-  
-  // populate images
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
-  img.push(document.getElementById("car"));
+  // populate objects and their respective images
+  for(var k=0;k<n;k++){
+    obj.push(new Obj(Math.floor(Math.random() * 800) + 1, Math.floor(Math.random() * 800) + 1, 16));
+    img.push(document.getElementById("car"));
+  }
 
   // get screen and context and set timer
   canvas = document.getElementById("screen");
@@ -51,18 +41,18 @@ function draw(){
   context.fillStyle = "red";
   context.fillRect(vertical,horizontal,10,10);
   
-  for(var i=0;i<8;i++){
+  for(var i=0;i<obj.length;i++){
     context.drawImage(img[i], obj[i].x, obj[i].y);
 	var origx = obj[i].x;
 	var origy = obj[i].y;
 	
-	if(runs % 4 != 0){
+	if(runs % frequency != 0){
 	  if(obj[i].x < vertical){
 	    obj[i].x += 10;
 		obj[i].dx = obj[i].x - origx;
 		
 		if(obj[i].y < horizontal){
-		  obj[i].y += Math.floor(Math.random() * 10) + 1;
+		  obj[i].y += 10;
 		  obj[i].dy = obj[i].y - origy;
 		}
 	  }
@@ -71,11 +61,11 @@ function draw(){
 		obj[i].dx = obj[i].x - origx;
 	    
 		if(obj[i].y < horizontal){
-		  obj[i].y += Math.floor(Math.random() * 10) + 1;
+		  obj[i].y += 10;
 		  obj[i].dy = obj[i].y - origy;
 		}
 		else{
-		  obj[i].y -= Math.floor(Math.random() * 10) + 1;
+		  obj[i].y -= 10;
 		  obj[i].dy = obj[i].y - origy;
 		}
 	  }
@@ -91,7 +81,7 @@ function averageMotion(){
   var sumx = 0;
   var sumy = 0;
   
-  for(var j=0;j<8;j++){
+  for(var j=0;j<obj.length;j++){
     sumx += obj[j].dx;
     sumy +=	obj[j].dy;
   }
